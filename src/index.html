@@ -10,31 +10,43 @@
   <header class="header">
     <h1 class="header__title">ToDo List</h1>
   </header>
-  <div class="input">
-    <input type="text">
-    <button class="input__btn">+</button>
-  </div>
-  <ul class="list">
+  <form id="form" class="form">
+    <input
+      name="name"
+      class="form__input" 
+      type="text" 
+      autofocus
+      autocomplete="off"
+    />
+    <button class="form__btn" type="submit">+</button>
+  </form>
+  <ul id="list" class="list">
     <li class="list__item">
       <label>
         <input type="checkbox">накидать HTML
       </label>
+      <button class="list__btn-del">-</button>
     </li>
     <li class="list__item">
       <label>
         <input type="checkbox">накидать CSS
       </label>
+      <button class="list__btn-del">-</button>
     </li>
     <li class="list__item">
       <label>
         <input type="checkbox">сделать чек-боксы
       </label>
+      <button class="list__btn-del">-</button>
     </li>
     <li class="list__item">
       <label>
         <input type="checkbox">сделать кнопки
       </label>
+      <button class="list__btn-del">-</button>
     </li>
   </ul>
+
+  <script src="./js/scripts.js" type="module"></script>
 </body>
 </html>
