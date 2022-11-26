@@ -1,0 +1,19 @@
+{
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.7.0",
+    "carousel-js": "^4.0.0",
+    "parcel": "^2.7.0",
+    "parcel-plugin-nunjucks": "^2.2.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "parcel src/index.html",
+    "build": "parcel build src/index.html --dist-dir build --public-url .",
+    "deploy": "npm run build && gh-pages -d build"
+  },
+  "dependencies": {
+    "nunjucks": "^3.2.3",
+    "reset-css": "^5.0.1",
+    "swiper": "^8.4.4"
+  }
+}
