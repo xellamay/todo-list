@@ -1,4 +1,5 @@
 import { v4 as uuid } from 'uuid';
+
 document.addEventListener("DOMContentLoaded", init);
 
 const tasks = [
@@ -29,7 +30,7 @@ function initAddTaskForm() {
   const submitBtn = document.querySelector("#form-submit-btn");
   const inputName = form.name;
 
-  form.addEventListener("submit", function(e){
+  form.addEventListener("submit", function(e) {
     e.preventDefault();
     e.stopPropagation();
 
@@ -58,10 +59,15 @@ function initAddTaskForm() {
 function renderTaskList() {
   const list = document.querySelector("#list");
   list.innerHTML = "";
-  tasks.forEach(function(task) {
-    const newTask = createToDoElement(task)
-    list.append(newTask)
-  })
+
+  if (tasks.length) {
+    tasks.forEach(function(task) {
+      const newTask = createToDoElement(task)
+      list.append(newTask)
+    })
+  } else {
+    list.innerHTML = "Список задач пуст, чтобы добавить задачу воспользуйтесь формой выше"
+  }
 }
 
 function createToDoElement(task) {

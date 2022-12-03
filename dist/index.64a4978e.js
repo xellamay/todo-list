@@ -581,10 +581,11 @@ function initAddTaskForm() {
 function renderTaskList() {
     const list = document.querySelector("#list");
     list.innerHTML = "";
-    tasks.forEach(function(task) {
+    if (tasks.length) tasks.forEach(function(task) {
         const newTask = createToDoElement(task);
         list.append(newTask);
     });
+    else list.innerHTML = "Список задач пуст, чтобы добавить задачу воспользуйтесь формой выше";
 }
 function createToDoElement(task) {
     const node = document.createElement("li");
