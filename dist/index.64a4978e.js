@@ -589,13 +589,46 @@ function renderTaskList() {
 function createToDoElement(task) {
     const node = document.createElement("li");
     node.classList.add("list__item");
+    node.dataset.id = task.id;
     node.innerHTML = `
-    <label>
-      <input type="checkbox">${task.name}
+    <label class="list__inner">
+      <input class="list__checkbox" type="checkbox">
+        <div class="list__text">${task.name}</div>
     </label>
     <button class="list__btn-del">-</button>
   `;
+    // Подготовка checkbox
+    const checkboxNode = node.querySelector(".list__checkbox");
+    checkboxNode.onclick = doneTask;
+    checkboxNode.checked = task.checked;
+    // Зачеркивание
+    if (task.checked) node.querySelector(".list__text").classList.add("list__text_line");
+    // Подготовка кнопки
+    node.querySelector("button").onclick = deleteToDoElement;
     return node;
+}
+function deleteToDoElement(event) {
+    const parentNode = event.target.parentNode;
+    const taskId = parentNode.dataset.id;
+    const taskIndex = tasks.findIndex(function(el) {
+        return el.id === taskId;
+    });
+    if (taskIndex !== -1) {
+        tasks.splice(taskIndex, 1);
+        renderTaskList();
+    }
+}
+function doneTask(event) {
+    const parentNode = event.target.parentNode.parentNode;
+    const taskId = parentNode.dataset.id;
+    const taskIndex = tasks.findIndex(function(el) {
+        return el.id === taskId;
+    });
+    if (taskIndex !== -1) {
+        const task = tasks[taskIndex];
+        task.checked = !task.checked;
+        renderTaskList();
+    }
 }
 
 },{"uuid":"j4KJi"}],"j4KJi":[function(require,module,exports) {

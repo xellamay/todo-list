@@ -1,0 +1,11 @@
+@mixin title {
+  font-family: 'Solway', serif;
+  font-weight: 700;
+  font-size: 32px;
+}
+
+@mixin text {
+  font-family: 'Comfortaa';
+  font-weight: 300;
+  font-size: 24px;
+}
