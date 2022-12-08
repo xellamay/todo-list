@@ -44,25 +44,25 @@
   display: flex;
 }
 
-.list__inner {
-  column-gap: 5px;
-  display: flex;
-}
-
-.list__item {
+.list-item {
   align-items: center;
   column-gap: 15px;
   display: flex;
 }
 
-.list__btn-del {
+.list-item__label {
+  column-gap: 5px;
+  display: flex;
+}
+
+.list-item__btn-del {
   background-color: #e34c4c;
   border: 0;
   border-radius: 5px;
   padding: 5px 10px;
 }
 
-.list__text_line {
+.list-item__text_line {
   text-decoration: line-through;
 }
 

@@ -534,23 +534,8 @@ function hmrAcceptRun(bundle, id) {
 },{}],"goJYj":[function(require,module,exports) {
 var _uuid = require("uuid");
 document.addEventListener("DOMContentLoaded", init);
-const tasks = [
-    {
-        id: (0, _uuid.v4)(),
-        name: "накидать HTML",
-        checked: false
-    },
-    {
-        id: (0, _uuid.v4)(),
-        name: "накидать CSS",
-        checked: false
-    },
-    {
-        id: (0, _uuid.v4)(),
-        name: "Сделать чекбоксы",
-        checked: false
-    }, 
-];
+const LSK_TASKS = "tasks";
+const tasks = getLocalStorageItems();
 function init() {
     initAddTaskForm();
     renderTaskList();
@@ -568,7 +553,7 @@ function initAddTaskForm() {
                 name: inputName.value,
                 checked: false
             });
-            renderTaskList();
+            updateTasks();
             form.reset();
         }
         inputName.focus();
@@ -589,47 +574,48 @@ function renderTaskList() {
 }
 function createToDoElement(task) {
     const node = document.createElement("li");
-    node.classList.add("list__item");
-    node.dataset.id = task.id;
+    node.classList.add("list-item");
     node.innerHTML = `
-    <label class="list__inner">
-      <input class="list__checkbox" type="checkbox">
-        <div class="list__text">${task.name}</div>
+    <label class="list-item__label">
+      <input class="list-item__checkbox" type="checkbox">
+        <div class="list-item__text">${task.name}</div>
     </label>
-    <button class="list__btn-del">-</button>
+    <button class="list-item__btn-del">-</button>
   `;
     // Подготовка checkbox
-    const checkboxNode = node.querySelector(".list__checkbox");
-    checkboxNode.onclick = doneTask;
+    const checkboxNode = node.querySelector(".list-item__checkbox");
+    checkboxNode.onclick = ()=>doneTask(task);
     checkboxNode.checked = task.checked;
     // Зачеркивание
-    if (task.checked) node.querySelector(".list__text").classList.add("list__text_line");
+    if (task.checked) node.querySelector(".list-item__text").classList.add("list-item__text_line");
     // Подготовка кнопки
-    node.querySelector("button").onclick = deleteToDoElement;
+    node.querySelector(".list-item__btn-del").onclick = ()=>deleteToDoElement(task);
     return node;
 }
-function deleteToDoElement(event) {
-    const parentNode = event.target.parentNode;
-    const taskId = parentNode.dataset.id;
+function deleteToDoElement(task) {
+    tasks.splice(task.id, 1);
+    updateTasks();
+}
+function doneTask(task) {
     const taskIndex = tasks.findIndex(function(el) {
-        return el.id === taskId;
+        return el.id === task.id;
     });
     if (taskIndex !== -1) {
-        tasks.splice(taskIndex, 1);
-        renderTaskList();
+        const taskInList = tasks[taskIndex];
+        taskInList.checked = !taskInList.checked;
+        updateTasks();
     }
 }
-function doneTask(event) {
-    const parentNode = event.target.parentNode.parentNode;
-    const taskId = parentNode.dataset.id;
-    const taskIndex = tasks.findIndex(function(el) {
-        return el.id === taskId;
-    });
-    if (taskIndex !== -1) {
-        const task = tasks[taskIndex];
-        task.checked = !task.checked;
-        renderTaskList();
-    }
+function updateTasks() {
+    renderTaskList();
+    updateLocalStorageItems();
+}
+function updateLocalStorageItems() {
+    localStorage.setItem(LSK_TASKS, JSON.stringify(tasks));
+}
+function getLocalStorageItems() {
+    const items = JSON.parse(localStorage.getItem(LSK_TASKS));
+    return items || [];
 }
 
 },{"uuid":"j4KJi"}],"j4KJi":[function(require,module,exports) {
