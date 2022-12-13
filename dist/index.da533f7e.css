@@ -1,5 +1,5 @@
 .container {
-  max-width: 1000px;
+  max-width: 800px;
   margin: 0 auto;
 }
 
@@ -27,16 +27,39 @@
 }
 
 .form__btn {
+  cursor: pointer;
   background-color: #8c74f5;
   border: 0;
   border-radius: 10px;
   padding: 10px 15px;
 }
 
+.filter {
+  justify-content: space-between;
+  margin: 30px 0;
+  display: flex;
+}
+
+.filter__button {
+  cursor: pointer;
+  border: 1px solid gray;
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-family: Comfortaa;
+  font-size: 18px;
+  font-weight: 300;
+}
+
+.filter__button-check {
+  background-color: #ad9ef3;
+  box-shadow: inset -3px -2px #707070;
+}
+
 .list {
   flex-direction: column;
   justify-content: center;
   row-gap: 15px;
+  padding: 0;
   font-family: Comfortaa;
   font-size: 24px;
   font-weight: 300;

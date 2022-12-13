@@ -6,25 +6,50 @@ const LSK_TASKS = "tasks";
 
 const tasks = getLocalStorageItems();
 
+const filterStateStatus = {
+  ALL: "all",
+  DONE: "done",
+  UNDONE: "undone"
+}
+
+let filterState = filterStateStatus.UNDONE;
+
 const domElements = {
   list: document.querySelector("#list"),
   form: document.forms["create-task-form"],
   input: document.forms["create-task-form"]["name"],
   submitBtn: document.querySelector("#form-submit-btn"),
+  btnAllTasks: document.querySelector(".button_allTasks"),
+  btnDoneTasks: document.querySelector(".button_doneTasks"),
+  btnUndoneTasks: document.querySelector(".button_undoneTasks"),
 }
 
 function init() {
   addTaskForm();
-  renderTaskList();
+  renderTaskListByFilter();
 }
 
-function renderTaskList() {
+function renderTaskListByFilter() {
+  if (filterState === filterStateStatus.ALL) {
+    renderTaskList(tasks);
+  }
+  if (filterState === filterStateStatus.DONE) {
+    const filteredTask = tasks.filter(filterByDone);
+    renderTaskList(filteredTask);
+  }
+  if (filterState === filterStateStatus.UNDONE) {
+    const filteredTask = tasks.filter(filterByUndone);
+    renderTaskList(filteredTask);
+  }
+}
+
+function renderTaskList(passTask = tasks) {
   const { list } = domElements;
   list.innerHTML = "";
-  if (tasks.length === 0) {
+  if (passTask.length === 0) {
     list.innerHTML = "Список задач пуст";
   } else {
-    tasks.forEach((task) => {
+    passTask.forEach((task) => {
       const newNode = createToDoElement(task);
       list.append(newNode);
     })
@@ -109,6 +134,54 @@ function updateLocalStorageItems() {
 }
 
 function updateTasks() {
-  renderTaskList();
+  renderTaskListByFilter();
   updateLocalStorageItems();
 }
+
+function filterByDone(task) {
+  return task.checked;
+}
+
+function filterByUndone(task) {
+  return !task.checked;
+}
+
+function removeFilterClassOnButtons() {
+  const { btnAllTasks, btnDoneTasks, btnUndoneTasks } = domElements;
+  btnDoneTasks.classList.remove("filter__button-check");
+  btnUndoneTasks.classList.remove("filter__button-check");
+  btnAllTasks.classList.remove("filter__button-check");
+}
+
+domElements.btnAllTasks.addEventListener("click", function() {
+  if (filterState !== filterStateStatus.ALL) {
+    const { btnAllTasks } = domElements;
+
+    filterState = filterStateStatus.ALL;
+    removeFilterClassOnButtons();
+    btnAllTasks.classList.add("filter__button-check");
+    renderTaskListByFilter();
+  }
+})
+
+domElements.btnDoneTasks.addEventListener("click", function() {
+  if (filterState !== filterStateStatus.DONE) {
+    const { btnDoneTasks } = domElements;
+
+    filterState = filterStateStatus.DONE;
+    removeFilterClassOnButtons();
+    btnDoneTasks.classList.add("filter__button-check");
+    renderTaskListByFilter();
+  }
+})
+
+domElements.btnUndoneTasks.addEventListener("click", function() {
+  if (filterState !== filterStateStatus.UNDONE) {
+    const { btnUndoneTasks } = domElements;
+
+    filterState = filterStateStatus.UNDONE;
+    removeFilterClassOnButtons();
+    btnUndoneTasks.classList.add("filter__button-check");
+    renderTaskListByFilter();
+  }
+})
