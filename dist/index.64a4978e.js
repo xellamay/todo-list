@@ -533,7 +533,6 @@ function hmrAcceptRun(bundle, id) {
 
 },{}],"goJYj":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-var _uuid = require("uuid");
 var _taskListService = require("./TaskListService");
 var _taskListServiceDefault = parcelHelpers.interopDefault(_taskListService);
 document.addEventListener("DOMContentLoaded", init);
@@ -671,7 +670,52 @@ domElements.btnUndoneTasks.addEventListener("click", function() {
     }
 });
 
-},{"uuid":"j4KJi","./TaskListService":"aswjn","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"j4KJi":[function(require,module,exports) {
+},{"./TaskListService":"aswjn","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"aswjn":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _uuid = require("uuid");
+class TaskListService {
+    constructor(initialValues = [], onUpdate){
+        this._list = initialValues;
+        this._onUpdate = onUpdate;
+    }
+    get list() {
+        return this._list;
+    }
+    create(name) {
+        this._list.push({
+            id: (0, _uuid.v4)(),
+            name: name,
+            checked: false
+        });
+        this._onUpdate(this._list);
+    }
+    updateById(id, payLoad = {}) {
+        const findIndex = this._list.findIndex((el)=>el.id === id);
+        if (findIndex !== -1) {
+            this._list[findIndex] = {
+                ...payLoad,
+                id: id
+            };
+            this._onUpdate(this._list);
+        }
+    }
+    toggleTaskById(id) {
+        const findIndex = this._list.findIndex((el)=>el.id === id);
+        if (findIndex !== -1) {
+            const currentTask = this._list[findIndex];
+            currentTask.checked = !currentTask.checked;
+            this._onUpdate(this._list);
+        }
+    }
+    deleteById(id) {
+        this._list = this._list.filter((el)=>el.id !== id);
+        this._onUpdate(this._list);
+    }
+}
+exports.default = TaskListService;
+
+},{"uuid":"j4KJi","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"j4KJi":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "v1", ()=>(0, _v1JsDefault.default));
@@ -824,51 +868,6 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 exports.default = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"aswjn":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _uuid = require("uuid");
-class TaskListService {
-    constructor(initialValues = [], onUpdate){
-        this._list = initialValues;
-        this._onUpdate = onUpdate;
-    }
-    get list() {
-        return this._list;
-    }
-    create(name) {
-        this._list.push({
-            id: (0, _uuid.v4)(),
-            name: name,
-            checked: false
-        });
-        this._onUpdate(this._list);
-    }
-    updateById(id, payLoad = {}) {
-        const findIndex = this._list.findIndex((el)=>el.id === id);
-        if (findIndex !== -1) {
-            this._list[findIndex] = {
-                ...payLoad,
-                id: id
-            };
-            this._onUpdate(this._list);
-        }
-    }
-    toggleTaskById(id) {
-        const findIndex = this._list.findIndex((el)=>el.id === id);
-        if (findIndex !== -1) {
-            const currentTask = this._list[findIndex];
-            currentTask.checked = !currentTask.checked;
-            this._onUpdate(this._list);
-        }
-    }
-    deleteById(id) {
-        this._list = this._list.filter((el)=>el.id !== id);
-        this._onUpdate(this._list);
-    }
-}
-exports.default = TaskListService;
-
-},{"uuid":"j4KJi","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["9Zwzb","goJYj"], "goJYj", "parcelRequire94c2")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["9Zwzb","goJYj"], "goJYj", "parcelRequire94c2")
 
 //# sourceMappingURL=index.64a4978e.js.map
