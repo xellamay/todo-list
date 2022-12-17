@@ -1,4 +1,5 @@
 import { v4 as uuid } from 'uuid';
+import TaskListService from "./TaskListService";
 
 document.addEventListener("DOMContentLoaded", init);
 
@@ -24,6 +25,8 @@ const domElements = {
   btnUndoneTasks: document.querySelector(".button_undoneTasks"),
 }
 
+const taskListService = new TaskListService(tasks);
+
 function init() {
   addTaskForm();
   renderTaskListByFilter();
@@ -31,19 +34,19 @@ function init() {
 
 function renderTaskListByFilter() {
   if (filterState === filterStateStatus.ALL) {
-    renderTaskList(tasks);
+    renderTaskList(taskListService.list);
   }
   if (filterState === filterStateStatus.DONE) {
-    const filteredTask = tasks.filter(filterByDone);
+    const filteredTask = taskListService.list.filter(filterByDone);
     renderTaskList(filteredTask);
   }
   if (filterState === filterStateStatus.UNDONE) {
-    const filteredTask = tasks.filter(filterByUndone);
+    const filteredTask = taskListService.list.filter(filterByUndone);
     renderTaskList(filteredTask);
   }
 }
 
-function renderTaskList(passTask = tasks) {
+function renderTaskList(passTask = taskListService.list) {
   const { list } = domElements;
   list.innerHTML = "";
   if (passTask.length === 0) {
@@ -87,11 +90,7 @@ function addTaskForm() {
   form.addEventListener("submit", function(event) {
     event.preventDefault();
     event.stopPropagation();
-    tasks.push({
-      name: input.value,
-      id: uuid(),
-      checked: false,
-    })
+    taskListService.create(input.value);
     updateTasks();
     form.reset();
     input.focus();
@@ -108,18 +107,12 @@ function addTaskForm() {
 }
 
 function deleteToDoElement(task) {
-  const index = tasks.findIndex(function(el) {
-    return el.id === task.id;
-  });
-  tasks.splice(index, 1);
+  taskListService.deleteById(task.id);
   updateTasks();
 }
 
 function doneTask(task) {
-  const index = tasks.findIndex(function(el) {
-    return el.id === task.id;
-  });
-  tasks[index].checked = !tasks[index].checked;
+  taskListService.toggleTaskById(task.id);
   updateTasks();
 }
 
@@ -130,7 +123,7 @@ function getLocalStorageItems() {
 }
 
 function updateLocalStorageItems() {
-  localStorage.setItem(LSK_TASKS, JSON.stringify(tasks));
+  localStorage.setItem(LSK_TASKS, JSON.stringify(taskListService.list));
 }
 
 function updateTasks() {
