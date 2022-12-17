@@ -554,7 +554,7 @@ const domElements = {
     btnDoneTasks: document.querySelector(".button_doneTasks"),
     btnUndoneTasks: document.querySelector(".button_undoneTasks")
 };
-const taskListService = new (0, _taskListServiceDefault.default)(tasks);
+const taskListService = new (0, _taskListServiceDefault.default)(tasks, ()=>updateTasks());
 function init() {
     addTaskForm();
     renderTaskListByFilter();
@@ -605,7 +605,6 @@ function addTaskForm() {
         event.preventDefault();
         event.stopPropagation();
         taskListService.create(input.value);
-        updateTasks();
         form.reset();
         input.focus();
         submitBtn.disabled = true;
@@ -617,11 +616,9 @@ function addTaskForm() {
 }
 function deleteToDoElement(task) {
     taskListService.deleteById(task.id);
-    updateTasks();
 }
 function doneTask(task) {
     taskListService.toggleTaskById(task.id);
-    updateTasks();
 }
 function getLocalStorageItems() {
     const items = JSON.parse(localStorage.getItem(LSK_TASKS));
@@ -832,8 +829,9 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _uuid = require("uuid");
 class TaskListService {
-    constructor(initialValues = []){
+    constructor(initialValues = [], onUpdate){
         this._list = initialValues;
+        this._onUpdate = onUpdate;
     }
     get list() {
         return this._list;
@@ -844,23 +842,29 @@ class TaskListService {
             name: name,
             checked: false
         });
+        this._onUpdate(this._list);
     }
     updateById(id, payLoad = {}) {
         const findIndex = this._list.findIndex((el)=>el.id === id);
-        if (findIndex !== -1) this._list[findIndex] = {
-            ...payLoad,
-            id: id
-        };
+        if (findIndex !== -1) {
+            this._list[findIndex] = {
+                ...payLoad,
+                id: id
+            };
+            this._onUpdate(this._list);
+        }
     }
     toggleTaskById(id) {
         const findIndex = this._list.findIndex((el)=>el.id === id);
         if (findIndex !== -1) {
             const currentTask = this._list[findIndex];
             currentTask.checked = !currentTask.checked;
+            this._onUpdate(this._list);
         }
     }
     deleteById(id) {
         this._list = this._list.filter((el)=>el.id !== id);
+        this._onUpdate(this._list);
     }
 }
 exports.default = TaskListService;

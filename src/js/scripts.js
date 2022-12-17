@@ -25,7 +25,10 @@ const domElements = {
   btnUndoneTasks: document.querySelector(".button_undoneTasks"),
 }
 
-const taskListService = new TaskListService(tasks);
+const taskListService = new TaskListService(
+  tasks,
+  () => updateTasks()
+);
 
 function init() {
   addTaskForm();
@@ -91,7 +94,6 @@ function addTaskForm() {
     event.preventDefault();
     event.stopPropagation();
     taskListService.create(input.value);
-    updateTasks();
     form.reset();
     input.focus();
     submitBtn.disabled = true;
@@ -108,12 +110,10 @@ function addTaskForm() {
 
 function deleteToDoElement(task) {
   taskListService.deleteById(task.id);
-  updateTasks();
 }
 
 function doneTask(task) {
   taskListService.toggleTaskById(task.id);
-  updateTasks();
 }
 
 function getLocalStorageItems() {
